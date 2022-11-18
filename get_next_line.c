@@ -1,8 +1,7 @@
 #include "get_next_line.h"
 
-static char *stock;
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 5
+#define BUFFER_SIZE 5
 #endif
 
 int checkN(char *str)
@@ -10,60 +9,82 @@ int checkN(char *str)
     int i;
 
     i = 0;
-    while(str[i] != '\0')
+    while (str[i] != '\0')
     {
         if (str[i] == '\n')
             return (1);
         i++;
     }
-    return (i);
+    return (0);
 }
-// we used this function so we can free the old stock without worries :D
-// this function gives ft_substr a copy of stock so we can free stock
-// without worrying about having memory leaks and then use it to make
-// stock store what has been left and line store "string ended with newline"
-char *splitit(char *line, char *stac)
-{
-    int i;
 
-    i = 0;
-    while(stock[i] != '\n')
+char *cut_stock(char *save, int i)
+{
+    char    *cache;
+
+    if (!save)
+        return NULL;
+    if (save[i+1] == '\0')
     {
-        i++;
+        free(save);
+        return (NULL);
     }
-    line = ft_substr(stac, 0, i+1);
-    // if ()//todo : if its null then bla bla bla else free the stock
-    if (stac[i+1] != '\0')
-        stock = ft_substr(stac, i+1, ft_strlen(stac) - i);
-    else
+    cache = ft_substr(save, i+1, ft_strlen(save));
+    free(save);
+    return (cache);
+}
+
+char *get_next_line(int fd)
+{
+    static char *stock;
+    char *strh = NULL;
+    char *line = NULL;
+    int i;
+    int j;
+
+    j = 1;
+    if (fd < 0 || fd == 1 || fd == 2 || BUFFER_SIZE < 0)
+        return (NULL);
+    strh = (char *)malloc(BUFFER_SIZE + 1);
+    strh[BUFFER_SIZE] = '\0';
+    if (stock == NULL)
+    {
+        stock = (char *)malloc(BUFFER_SIZE + 1);
+        if (!stock)
+            return (NULL);
+        stock[BUFFER_SIZE] = '\0';
+    }
+    while (checkN(stock) != 1 && j != 0)
+    {
+        j = read(fd, strh, BUFFER_SIZE);
+        printf("%d\n", j);
+        if (j > 0)
+        {
+            stock = ft_strjoin(stock, strh, j);
+            printf("stock: %s------------\n", stock);
+        }
+    }
+    free(strh);
+    i = 0;
+    while (stock[i] != '\n' && stock[i])
+        i++;
+    if (j == 0 && ft_strlen(stock) == 0)
     {
         free(stock);
         stock = NULL;
-    }
-    return (line);
-}
-
-char    *get_next_line(int fd)
-{
-    char *strh = NULL;
-    char *line = NULL;
-
-    if (fd < 0 || fd == 1 || fd == 2)
         return (NULL);
-    strh = (char *)malloc(BUFFER_SIZE + 1);
-    if (stock == NULL)
-        stock = (char *)malloc(BUFFER_SIZE + 1);
-    while(checkN(stock) != 1)
-    {
-        read(fd, strh, BUFFER_SIZE);
-        stock = ft_strjoin(stock, strh);
     }
-    free(strh);
-
-    // printf("%c\n", stock[0]);
-    printf("stock: %s    ---\n", stock);
-    line = splitit(line, stock);
-    printf("stock: %s    ---\n", stock);
+    else if (stock != NULL && stock[i] == '\0')
+    {
+        return (stock);
+    }
+    else
+    {
+        line = ft_substr(stock, 0, i+1);
+        // printf("stock: %s------------\n", stock);
+        stock = cut_stock(stock, i);
+        // printf("stock: %s----------\n", stock);
+    }
     return (line);
 }
 
@@ -71,5 +92,7 @@ int main()
 {
     int fd;
     fd = open("btata.txt", O_CREAT | O_RDONLY);
-    printf("%s",  get_next_line(fd));
+    printf("%s", get_next_line(fd));
+    printf("%s", get_next_line(fd));
+    printf("%s", get_next_line(fd));
 }

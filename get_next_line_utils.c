@@ -14,7 +14,7 @@ char	*ft_strdup(char *s1)
 }
 
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2, int size)
 {
 	size_t	i;
 	size_t	j;
@@ -30,7 +30,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s1[i])
 		str[j++] = s1[i++];
 	i = 0;
-	while (s2[i])
+	while (s2[i] && i < size)
 		str[j++] = s2[i++];
 	str[j] = '\0';
     free(s1);
