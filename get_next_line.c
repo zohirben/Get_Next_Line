@@ -57,11 +57,9 @@ char *get_next_line(int fd)
     while (checkN(stock) != 1 && j != 0)
     {
         j = read(fd, strh, BUFFER_SIZE);
-        printf("%d\n", j);
         if (j > 0)
         {
             stock = ft_strjoin(stock, strh, j);
-            printf("stock: %s------------\n", stock);
         }
     }
     free(strh);
@@ -76,7 +74,10 @@ char *get_next_line(int fd)
     }
     else if (stock != NULL && stock[i] == '\0')
     {
-        return (stock);
+        printf("stock: %s------------\n", stock);
+        line = stock;
+        stock = NULL;
+        return (line);
     }
     else
     {
@@ -92,6 +93,7 @@ int main()
 {
     int fd;
     fd = open("btata.txt", O_CREAT | O_RDONLY);
+    printf("%s", get_next_line(fd));
     printf("%s", get_next_line(fd));
     printf("%s", get_next_line(fd));
     printf("%s", get_next_line(fd));
