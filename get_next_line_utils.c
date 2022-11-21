@@ -14,7 +14,7 @@ char	*ft_strdup(char *s1)
 }
 
 
-char	*ft_strjoin(char *s1, char *s2, int size)
+char	*ft_strjoin(char *s1, char *s2, size_t size)
 {
 	size_t	i;
 	size_t	j;

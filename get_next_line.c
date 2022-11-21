@@ -1,8 +1,16 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zbenaiss <zbenaiss@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/21 09:53:29 by zbenaiss          #+#    #+#             */
+/*   Updated: 2022/11/21 10:40:13 by zbenaiss         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 5
-#endif
+#include "get_next_line.h"
 
 int checkN(char *str)
 {
@@ -31,38 +39,48 @@ char *cut_stock(char *save, int i)
     }
     cache = ft_substr(save, i+1, ft_strlen(save));
     free(save);
+    save = 0;
     return (cache);
 }
 
 char *get_next_line(int fd)
 {
     static char *stock;
-    char *strh = NULL;
-    char *line = NULL;
+    char *strh;
+    char *line;
     int i;
     int j;
 
-    j = 1;
-    if (fd < 0 || fd == 1 || fd == 2 || BUFFER_SIZE < 0)
+    if (fd < 0 || fd == 1 || fd == 2 || BUFFER_SIZE <= 0)
         return (NULL);
-    strh = (char *)malloc(BUFFER_SIZE + 1);
+    strh = (char *)malloc(BUFFER_SIZE +1);
+    if (!strh)
+        return (NULL);
     strh[BUFFER_SIZE] = '\0';
     if (stock == NULL)
     {
-        stock = (char *)malloc(BUFFER_SIZE + 1);
+        stock = (char *)malloc((BUFFER_SIZE +1));
         if (!stock)
             return (NULL);
         stock[BUFFER_SIZE] = '\0';
     }
+    j = 1;
     while (checkN(stock) != 1 && j != 0)
     {
         j = read(fd, strh, BUFFER_SIZE);
-        if (j > 0)
+        if(j == -1)
         {
+            free(stock);
+            free(strh);
+            strh = NULL;
+            stock = NULL;
+            return (NULL);
+        }
+        else if (j > 0)
             stock = ft_strjoin(stock, strh, j);
         }
-    }
     free(strh);
+    strh = NULL;
     i = 0;
     while (stock[i] != '\n' && stock[i])
         i++;
