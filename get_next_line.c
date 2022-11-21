@@ -6,7 +6,7 @@
 /*   By: zbenaiss <zbenaiss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 09:53:29 by zbenaiss          #+#    #+#             */
-/*   Updated: 2022/11/21 10:40:13 by zbenaiss         ###   ########.fr       */
+/*   Updated: 2022/11/21 12:30:17 by zbenaiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,21 @@ int checkN(char *str)
         i++;
     }
     return (0);
+}
+void	*ft_calloc(size_t count, size_t size)
+{
+	size_t	i;
+	char	*str;
+
+	i = 0;
+	str = (char *)malloc(count * size);
+	if (!str)
+		return (0);
+	while (i < (count * size))
+	{
+		str[i++] = '\0';
+	}
+	return (str);
 }
 
 char *cut_stock(char *save, int i)
@@ -53,13 +68,13 @@ char *get_next_line(int fd)
 
     if (fd < 0 || fd == 1 || fd == 2 || BUFFER_SIZE <= 0)
         return (NULL);
-    strh = (char *)malloc(BUFFER_SIZE +1);
+    strh = calloc(1 ,BUFFER_SIZE + 1);
     if (!strh)
         return (NULL);
     strh[BUFFER_SIZE] = '\0';
     if (stock == NULL)
     {
-        stock = (char *)malloc((BUFFER_SIZE +1));
+        stock = calloc(1, BUFFER_SIZE + 1);
         if (!stock)
             return (NULL);
         stock[BUFFER_SIZE] = '\0';
@@ -71,14 +86,14 @@ char *get_next_line(int fd)
         if(j == -1)
         {
             free(stock);
+            stock = NULL;
             free(strh);
             strh = NULL;
-            stock = NULL;
             return (NULL);
         }
         else if (j > 0)
             stock = ft_strjoin(stock, strh, j);
-        }
+    }
     free(strh);
     strh = NULL;
     i = 0;
@@ -104,9 +119,9 @@ char *get_next_line(int fd)
     return (line);
 }
 
-int main()
-{
-    int fd;
-    fd = open("btata.txt", O_CREAT | O_RDONLY);
-    printf("%s", get_next_line(fd));
-}
+// int main()
+// {
+//     int fd;
+//     fd = open("btata.txt", O_CREAT | O_RDONLY);
+//     printf("%s", get_next_line(fd));
+// }
