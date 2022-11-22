@@ -6,7 +6,7 @@
 /*   By: zbenaiss <zbenaiss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 09:53:29 by zbenaiss          #+#    #+#             */
-/*   Updated: 2022/11/21 15:20:13 by zbenaiss         ###   ########.fr       */
+/*   Updated: 2022/11/22 18:46:49 by zbenaiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,6 @@ int	checkn(char *str)
 		i++;
 	}
 	return (0);
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	size_t	i;
-	char	*str;
-
-	i = 0;
-	str = (char *)malloc(count * size);
-	if (!str)
-		return (0);
-	while (i < (count * size))
-	{
-		str[i++] = '\0';
-	}
-	return (str);
 }
 
 char	*cut_stock(char *save, int i)

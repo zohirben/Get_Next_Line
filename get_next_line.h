@@ -6,7 +6,7 @@
 /*   By: zbenaiss <zbenaiss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 15:09:31 by zbenaiss          #+#    #+#             */
-/*   Updated: 2022/11/21 15:09:32 by zbenaiss         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:36:57 by zbenaiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ char	*ft_strdup(char *s1);
 char	*ft_strjoin(char *s1, char *s2, size_t size);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 size_t	ft_strlen(const char *str);
-void	*ft_memcpy(void *dst, const void *src, size_t n);
+void	*ft_calloc(size_t count, size_t size);
 
 #endif

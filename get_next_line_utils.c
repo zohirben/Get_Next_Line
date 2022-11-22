@@ -6,7 +6,7 @@
 /*   By: zbenaiss <zbenaiss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 15:09:26 by zbenaiss          #+#    #+#             */
-/*   Updated: 2022/11/21 15:09:27 by zbenaiss         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:36:34 by zbenaiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,21 +82,18 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*ft_calloc(size_t count, size_t size)
 {
 	size_t	i;
-	char	*str1;
-	char	*str2;
+	char	*str;
 
 	i = 0;
-	if (dst == src)
+	str = (char *)malloc(count * size);
+	if (!str)
 		return (0);
-	str1 = (char *)src;
-	str2 = (char *)dst;
-	while (i < n)
+	while (i < (count * size))
 	{
-		str2[i] = str1[i];
-		i++;
+		str[i++] = '\0';
 	}
-	return (str2);
+	return (str);
 }
