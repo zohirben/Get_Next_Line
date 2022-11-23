@@ -102,9 +102,9 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-// int main()
-// {
-//     int fd;
-//     fd = open("btata.txt", O_CREAT | O_RDONLY);
-//     printf("%s", get_next_line(fd));
-// }
+int main()
+{
+    int fd;
+    fd = open("btata.txt", O_CREAT | O_RDONLY);
+    printf("%s", get_next_line(fd));
+}
