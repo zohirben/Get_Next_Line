@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zbenaiss <zbenaiss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/21 09:53:29 by zbenaiss          #+#    #+#             */
-/*   Updated: 2022/11/22 18:46:49 by zbenaiss         ###   ########.fr       */
+/*   Created: 2022/11/23 19:49:16 by zbenaiss          #+#    #+#             */
+/*   Updated: 2022/11/24 09:51:20 by zbenaiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,68 +43,72 @@ char	*cut_stock(char *save, int i)
 	return (cache);
 }
 
-char	*get_next_line(int fd)
+char	*nerd(char *cache, int fd, int *j)
 {
-	static char	*stock;
-	char		*strh;
-	char		*line;
-	int			i;
-	int			j;
+	char	*strh;
 
-	if (fd < 0 || fd == 1 || fd == 2 || BUFFER_SIZE <= 0)
-		return (NULL);
 	strh = ft_calloc(1, BUFFER_SIZE + 1);
-	if (!strh)
-		return (NULL);
-	if (stock == NULL)
+	*j = 1;
+	while (checkn(cache) != 1 && *j != 0)
 	{
-		stock = ft_calloc(1, BUFFER_SIZE + 1);
-		if (!stock)
-			return (NULL);
-	}
-	j = 1;
-	while (checkn(stock) != 1 && j != 0)
-	{
-		j = read(fd, strh, BUFFER_SIZE);
-		if (j == -1)
+		*j = read(fd, strh, BUFFER_SIZE);
+		if (*j == -1)
 		{
-			free(stock);
-			stock = NULL;
+			free(cache);
+			cache = NULL;
 			free(strh);
 			strh = NULL;
 			return (NULL);
 		}
-		else if (j > 0)
-			stock = ft_strjoin(stock, strh, j);
+		else if (*j > 0)
+			cache = ft_strjoin(cache, strh, *j);
 	}
 	free(strh);
 	strh = NULL;
+	return (cache);
+}
+
+char	*checkerror(char *cache, int fd, int *j)
+{
+	if (fd < 0 || fd == 1 || fd == 2 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (cache == NULL)
+		cache = ft_calloc(1, BUFFER_SIZE + 1);
+	cache = nerd(cache, fd, j);
+	return (cache);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stock;
+	char		*line;
+	int			i;
+	int			j;
+
+	line = NULL;
+	stock = checkerror(stock, fd, &j);
+	if (stock == NULL)
+		return (NULL);
 	i = 0;
 	while (stock[i] != '\n' && stock[i])
 		i++;
-	if (j == 0 && ft_strlen(stock) == 0)
-	{
-		free(stock);
-		stock = NULL;
-		return (NULL);
-	}
-	else if (stock != NULL && stock[i] == '\0')
-	{
-		line = stock;
-		stock = NULL;
-		return (line);
-	}
-	else
+	if (stock != NULL && stock[i] == '\n')
 	{
 		line = ft_substr(stock, 0, i + 1);
 		stock = cut_stock(stock, i);
+		return (line);
 	}
+	else if (j == 0 && ft_strlen(stock) == 0)
+		free(stock);
+	else
+		line = stock;
+	stock = NULL;
 	return (line);
 }
 
-int main()
-{
-    int fd;
-    fd = open("btata.txt", O_CREAT | O_RDONLY);
-    printf("%s", get_next_line(fd));
-}
+// int main()
+// {
+//     int fd;
+//     fd = open("btata.txt", O_CREAT | O_RDONLY);
+//     printf("%s", get_next_line(fd));
+// }
